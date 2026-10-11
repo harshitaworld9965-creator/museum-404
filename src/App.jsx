@@ -1,8 +1,48 @@
 import './Museum.css'
+import { useRef } from 'react'
+import {useGSAP} from '@gsap/react';
+import gsap from  "gsap";
+
+gsap.registerPlugin(useGSAP);
 
 function App() {
+
+  const roomRef = useRef(null);
+
+  useGSAP(() => {
+    const tl = gsap.timeline();
+
+    tl.from('.exhibit', {
+      filter:'brightness(0)',
+      duration:1.2,
+      ease:'power1.inOut',
+    })
+    .from('.nail', {
+      scale:0,
+      duration:0.4,
+      ease:'back.out(3)',
+    }, '-=0.6')
+    .fromTo(
+      '.frame', {
+        y:-160,
+        autoAlpha:0,
+        rotation:12,
+      },
+      {
+        y:0,
+        autoAlpha:1,
+        rotation:12,
+        duration:0.6,
+        ease:'power2.in',
+      }
+    ).to('.frame', {rotation:-5, duration:2, ease:'elastic.out(1, 0.25'})
+    .from('.placard', {y:30, autoAlpha:0, duration:0.7, ease:'power3.out'}, '-=1.6')
+    .from('.lobby-link', {autoAlpha:0, duration:0.6}, '-=0.8')
+  }, 
+{scope: roomRef})
+
   return (
-    <main className="room">
+    <main className="room" ref={roomRef}>
       {/* Soft light that will follow the cursor (step 5) */}
       <div className="spotlight" aria-hidden="true"></div>
 
